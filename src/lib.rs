@@ -14,17 +14,11 @@ pub struct Day1;
 
 impl Solution for Day1 {
     fn part1(&self, input: &str) -> String {
-        let parsed_input = Day1::parse_input(input);
-        let food = parsed_input.iter().max().unwrap();
-        format!("{food}")
+        format!("{}", Day1::soln_impl(input, 1))
     }
 
     fn part2(&self, input: &str) -> String {
-        let parsed_input = Day1::parse_input(input);
-        let mut food = parsed_input;
-        food.sort();
-        let sum: usize = food.iter().rev().take(3).sum();
-        format!("{sum}")
+        format!("{}", Day1::soln_impl(input, 3))
     }
 }
 
@@ -35,6 +29,13 @@ impl Day1 {
             .split("\n\n")
             .map(|s| s.split("\n").map(|x| x.parse::<usize>().unwrap()).sum())
             .collect()
+    }
+
+    fn soln_impl(input: &str, n: usize) -> usize{
+        let parsed_input = Day1::parse_input(input);
+        let mut food = parsed_input;
+        food.sort();
+        food.iter().rev().take(n).sum()   
     }
 }
 
