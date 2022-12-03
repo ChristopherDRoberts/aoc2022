@@ -31,7 +31,7 @@ fn main() {
 }
 
 fn init() -> Vec<Box<dyn Solution>> {
-    vec![Box::new(Day1 {}), Box::new(Day2 {})]
+    vec![Box::new(Day1 {}), Box::new(Day2 {}), Box::new(Day3 {})]
 }
 
 fn print_tree(height: usize) {
