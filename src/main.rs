@@ -1,4 +1,5 @@
 use aoc2022::*;
+use aoc2022::solutions::*;
 use colored::Colorize;
 use core::panic;
 use rand::prelude::*;
