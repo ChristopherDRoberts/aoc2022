@@ -196,6 +196,71 @@ impl Day3 {
     }
 }
 
+pub struct Day4;
+
+struct Interval {
+    left: usize,
+    right: usize,
+}
+
+impl Interval {
+    fn new(left: usize, right: usize) -> Self {
+        Self { left, right }
+    }
+
+    fn contains(&self, other: &Interval) -> bool {
+        self.left <= other.left && self.right >= other.right
+    }
+
+    fn overlaps(&self, other: &Interval) -> bool {
+        if self.right < other.left || self.left > other.right {
+            false
+        } else {
+            true
+        }
+    }
+}
+
+impl Solution for Day4 {
+    fn part1(&self, input: &str) -> String {
+        let intervals = Day4::parse_input(input);
+        let result = intervals
+            .iter()
+            .filter(|p| p.0.contains(&p.1) || p.1.contains(&p.0))
+            .count();
+        format!("{result}")
+    }
+
+    fn part2(&self, input: &str) -> String {
+        let intervals = Day4::parse_input(input);
+        let result = intervals.iter().filter(|p| p.0.overlaps(&p.1)).count();
+        format!("{result}")
+    }
+}
+
+impl Day4 {
+    // TODO replace with regex
+    fn parse_input(input: &str) -> Vec<(Interval, Interval)> {
+        let mut intervals = Vec::new();
+        for line in input.trim().split('\n') {
+            let pairs: Vec<&str> = line.split(',').collect();
+            let first: Vec<usize> = pairs[0]
+                .split('-')
+                .map(|x| x.parse::<usize>().unwrap())
+                .collect();
+            let second: Vec<usize> = pairs[1]
+                .split('-')
+                .map(|x| x.parse::<usize>().unwrap())
+                .collect();
+            intervals.push((
+                Interval::new(first[0], first[1]),
+                Interval::new(second[0], second[1]),
+            ))
+        }
+        intervals
+    }
+}
+
 #[cfg(test)]
 mod tests {
 
@@ -293,5 +358,33 @@ CrZsJsPPZsGzwwsLwLmpwMDw
 ";
         let result = soln.part2(input);
         assert_eq!(result, "70")
+    }
+
+    #[test]
+    fn day4_part1_ex1() {
+        let soln = Day4 {};
+        let input = "2-4,6-8
+2-3,4-5
+5-7,7-9
+2-8,3-7
+6-6,4-6
+2-6,4-8                
+";
+        let result = soln.part1(input);
+        assert_eq!(result, "2")
+    }
+
+    #[test]
+    fn day4_part2_ex1() {
+        let soln = Day4 {};
+        let input = "2-4,6-8
+2-3,4-5
+5-7,7-9
+2-8,3-7
+6-6,4-6
+2-6,4-8                
+";
+        let result = soln.part2(input);
+        assert_eq!(result, "4")
     }
 }

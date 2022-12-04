@@ -1,5 +1,5 @@
 use aoc2022::*;
-use colored::{Colorize};
+use colored::Colorize;
 use core::panic;
 use rand::prelude::*;
 use std::env;
@@ -31,7 +31,12 @@ fn main() {
 }
 
 fn init() -> Vec<Box<dyn Solution>> {
-    vec![Box::new(Day1 {}), Box::new(Day2 {}), Box::new(Day3 {})]
+    vec![
+        Box::new(Day1 {}),
+        Box::new(Day2 {}),
+        Box::new(Day3 {}),
+        Box::new(Day4 {}),
+    ]
 }
 
 fn print_tree(height: usize) {
