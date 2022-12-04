@@ -196,6 +196,7 @@ impl Day3 {
     }
 }
 
+use regex::Regex;
 pub struct Day4;
 
 struct Interval {
@@ -239,25 +240,20 @@ impl Solution for Day4 {
 }
 
 impl Day4 {
-    // TODO replace with regex
     fn parse_input(input: &str) -> Vec<(Interval, Interval)> {
-        let mut intervals = Vec::new();
-        for line in input.trim().split('\n') {
-            let pairs: Vec<&str> = line.split(',').collect();
-            let first: Vec<usize> = pairs[0]
-                .split('-')
-                .map(|x| x.parse::<usize>().unwrap())
-                .collect();
-            let second: Vec<usize> = pairs[1]
-                .split('-')
-                .map(|x| x.parse::<usize>().unwrap())
-                .collect();
-            intervals.push((
-                Interval::new(first[0], first[1]),
-                Interval::new(second[0], second[1]),
-            ))
-        }
-        intervals
+        let re = Regex::new(r"(\d+)-(\d+),(\d+)-(\d+)").unwrap();
+        input
+            .trim()
+            .split('\n')
+            .map(|l| {
+                let caps = re.captures(l).unwrap();
+                let first =
+                    Interval::new(*(&caps[1].parse().unwrap()), *(&caps[2].parse().unwrap()));
+                let second =
+                    Interval::new(*(&caps[3].parse().unwrap()), *(&caps[4].parse().unwrap()));
+                (first, second)
+            })
+            .collect()
     }
 }
 
