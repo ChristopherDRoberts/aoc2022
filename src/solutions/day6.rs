@@ -55,7 +55,7 @@ mod tests {
     fn part2_ex1() {
         let soln = Day6 {};
         let input = "mjqjpqmgbljsphdztnvjfqwrcgsmlb";
-        let result = soln.part1(input);
+        let result = soln.part2(input);
         assert_eq!(result, "19");
     }
 }
