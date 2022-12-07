@@ -7,12 +7,7 @@ pub struct Day7;
 impl Solution for Day7 {
     fn part1(&self, input: &str) -> String {
         let sizes = Day7::dir_sizes(input);
-        let mut result = 0;
-        for v in sizes.values() {
-            if *v <= 100_000 {
-                result += v
-            };
-        }
+        let result: u32 = sizes.values().filter(|v| **v <= 100_000).sum();
         format!("{result}")
     }
 
