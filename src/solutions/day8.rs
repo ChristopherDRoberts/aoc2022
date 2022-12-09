@@ -106,6 +106,7 @@ impl Day8 {
                 break;
             }
         }
+        
         up * down * left * right
     }
 
