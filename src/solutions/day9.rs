@@ -1,139 +1,69 @@
+use crate::Solution;
 use std::collections::HashSet;
 
-use crate::Solution;
+enum Move {
+    Up(i32),
+    Down(i32),
+    Left(i32),
+    Right(i32),
+}
+
+#[derive(Copy, Clone, PartialEq, Eq, Hash)]
+struct Point {
+    x: i32,
+    y: i32,
+}
 
 pub struct Day9;
 
 impl Solution for Day9 {
     fn part1(&self, input: &str) -> String {
-        let moves = Day9::parse_input(input);
-        let mut head = (0, 0);
-        let mut tail = (0, 0);
-        let mut visited = HashSet::new();
-        visited.insert(tail);
-
-        for mov in moves {
-            match mov {
-                Move::Up(steps) => {
-                    for _ in 0..steps {
-                        let prev = head;
-                        head = (head.0, head.1 + 1);
-                        if !Day9::adjacent(head, tail) {
-                            tail = prev;
-                            visited.insert(tail);
-                        }
-                    }
-                }
-
-                Move::Down(steps) => {
-                    for _ in 0..steps {
-                        let prev = head;
-                        head = (head.0, head.1 - 1);
-                        if !Day9::adjacent(head, tail) {
-                            tail = prev;
-                            visited.insert(tail);
-                        }
-                    }
-                }
-
-                Move::Left(steps) => {
-                    for _ in 0..steps {
-                        let prev = head;
-                        head = (head.0 - 1, head.1);
-                        if !Day9::adjacent(head, tail) {
-                            tail = prev;
-                            visited.insert(tail);
-                        }
-                    }
-                }
-
-                Move::Right(steps) => {
-                    for _ in 0..steps {
-                        let prev = head;
-                        head = (head.0 + 1, head.1);
-                        if !Day9::adjacent(head, tail) {
-                            tail = prev;
-                            visited.insert(tail);
-                        }
-                    }
-                }
-            }
-        }
-        let result = visited.len();
-        format!("{result}")
+        Day9::soln_impl(input, 2)
     }
 
     fn part2(&self, input: &str) -> String {
-        let moves = Day9::parse_input(input);
-        let mut points = vec![(0, 0); 10];
-        let mut visited = HashSet::new();
-        visited.insert(points[9]);
-
-        for mov in moves {
-            match mov {
-                Move::Up(steps) => {
-                    for _ in 0..steps {
-                        points[0] = (points[0].0, points[0].1 + 1);
-                        for i in 1..points.len() {
-                            if !Day9::adjacent(points[i - 1], points[i]) {
-                                points[i] = Day9::step(points[i - 1], points[i]);
-                                if i == points.len() - 1 {
-                                    visited.insert(points[i]);
-                                }
-                            }
-                        }
-                    }
-                }
-
-                Move::Down(steps) => {
-                    for _ in 0..steps {
-                        points[0] = (points[0].0, points[0].1 - 1);
-                        for i in 1..points.len() {
-                            if !Day9::adjacent(points[i - 1], points[i]) {
-                                points[i] = Day9::step(points[i - 1], points[i]);
-                                if i == points.len() - 1 {
-                                    visited.insert(points[i]);
-                                }
-                            }
-                        }
-                    }
-                }
-
-                Move::Left(steps) => {
-                    for _ in 0..steps {
-                        points[0] = (points[0].0 - 1, points[0].1);
-                        for i in 1..points.len() {
-                            if !Day9::adjacent(points[i - 1], points[i]) {
-                                points[i] = Day9::step(points[i - 1], points[i]);
-                                if i == points.len() - 1 {
-                                    visited.insert(points[i]);
-                                }
-                            }
-                        }
-                    }
-                }
-
-                Move::Right(steps) => {
-                    for _ in 0..steps {
-                        points[0] = (points[0].0 + 1, points[0].1);
-                        for i in 1..points.len() {
-                            if !Day9::adjacent(points[i - 1], points[i]) {
-                                points[i] = Day9::step(points[i - 1], points[i]);
-                                if i == points.len() - 1 {
-                                    visited.insert(points[i]);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        let result = visited.len();
-        format!("{result}")
+        Day9::soln_impl(input, 10)
     }
 }
 
 impl Day9 {
+    fn soln_impl(input: &str, n: usize) -> String {
+        let moves = Day9::parse_input(input);
+        let mut points = vec![Point { x: 0, y: 0 }; n];
+        let mut visited = HashSet::new();
+        visited.insert(points[n - 1]);
+
+        for mov in moves {
+            match mov {
+                Move::Up(steps) => {
+                    for _ in 0..steps {
+                        Day9::update(0, 1, &mut points, &mut visited);
+                    }
+                }
+
+                Move::Down(steps) => {
+                    for _ in 0..steps {
+                        Day9::update(0, -1, &mut points, &mut visited);
+                    }
+                }
+
+                Move::Left(steps) => {
+                    for _ in 0..steps {
+                        Day9::update(-1, 0, &mut points, &mut visited);
+                    }
+                }
+
+                Move::Right(steps) => {
+                    for _ in 0..steps {
+                        Day9::update(1, 0, &mut points, &mut visited);
+                    }
+                }
+            }
+        }
+        let result = visited.len();
+        format!("{result}")
+    }
+
     fn parse_input(input: &str) -> Vec<Move> {
         input
             .trim()
@@ -153,22 +83,30 @@ impl Day9 {
             .collect()
     }
 
-    fn adjacent(head: (i32, i32), tail: (i32, i32)) -> bool {
-        (head.0 - tail.0).abs() <= 1 && (head.1 - tail.1).abs() <= 1
+    fn adjacent(head: &Point, tail: &Point) -> bool {
+        (head.x - tail.x).abs() <= 1 && (head.y - tail.y).abs() <= 1
     }
 
-    fn step(head: (i32, i32), tail: (i32, i32)) -> (i32, i32) {
-        let dx = (head.0 - tail.0).signum();
-        let dy = (head.1 - tail.1).signum();
-        (tail.0 + dx, tail.1 + dy)
+    fn step(head: &Point, tail: &Point) -> Point {
+        let dx = (head.x - tail.x).signum();
+        let dy = (head.y - tail.y).signum();
+        Point{x: tail.x + dx, y: tail.y + dy}
     }
-}
 
-enum Move {
-    Up(i32),
-    Down(i32),
-    Left(i32),
-    Right(i32),
+    fn update(dx: i32, dy: i32, points: &mut Vec<Point>, visited: &mut HashSet<Point>) {
+        points[0] = Point {
+            x: points[0].x + dx,
+            y: points[0].y + dy,
+        };
+        for i in 1..points.len() {
+            if !Day9::adjacent(&points[i - 1], &points[i]) {
+                points[i] = Day9::step(&points[i - 1], &points[i]);
+                if i == points.len() - 1 {
+                    visited.insert(points[i]);
+                }
+            }
+        }
+    }
 }
 
 #[cfg(test)]
