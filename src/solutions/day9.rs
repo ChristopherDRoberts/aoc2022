@@ -90,7 +90,10 @@ impl Day9 {
     fn step(head: &Point, tail: &Point) -> Point {
         let dx = (head.x - tail.x).signum();
         let dy = (head.y - tail.y).signum();
-        Point{x: tail.x + dx, y: tail.y + dy}
+        Point {
+            x: tail.x + dx,
+            y: tail.y + dy,
+        }
     }
 
     fn update(dx: i32, dy: i32, points: &mut Vec<Point>, visited: &mut HashSet<Point>) {
