@@ -6,7 +6,7 @@ impl Solution for Day11 {
     fn part1(&self, input: &str) -> String {
         let (mut items, ops, tests, div, rem) = Day11::init();
         let mut inspects = vec![0; items.len()];
-        for round in 0..20 {
+        for _round in 0..20 {
             for i in 0..items.len() {
                 for j in 0..items[i].len() {
                     inspects[i] += 1;
@@ -29,7 +29,7 @@ impl Solution for Day11 {
         let (mut items, ops, tests, div, rem) = Day11::init();
         let lcm: u64 = tests.iter().product();
         let mut inspects = vec![0u64; items.len()];
-        for round in 0..10_000 {
+        for _round in 0..10_000 {
             for i in 0..items.len() {
                 for j in 0..items[i].len() {
                     inspects[i] += 1;
