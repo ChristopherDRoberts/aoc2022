@@ -43,6 +43,7 @@ fn init() -> Vec<Box<dyn Solution>> {
         Box::new(Day8 {}),
         Box::new(Day9 {}),
         Box::new(Day10 {}),
+        Box::new(Day11 {}),
     ]
 }
 
